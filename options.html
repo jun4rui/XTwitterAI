@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>X Tweet Translator Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1da1f2;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .option-group {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .option-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        
+        input[type="text"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        button {
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto 0;
+        }
+        
+        button:hover {
+            background-color: #0d8bd9;
+        }
+        
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>X Tweet Translator 设置</h1>
+        
+        <div class="option-group">
+            <div class="checkbox-option">
+                <input type="checkbox" id="enableTranslation">
+                <label for="enableTranslation">启用推文翻译功能</label>
+            </div>
+        </div>
+        
+        <div class="option-group">
+            <label for="targetLanguage">目标翻译语言</label>
+            <select id="targetLanguage">
+                <option value="zh">中文</option>
+                <option value="ja">日语</option>
+                <option value="ko">韩语</option>
+                <option value="es">西班牙语</option>
+                <option value="fr">法语</option>
+                <option value="de">德语</option>
+                <option value="ru">俄语</option>
+            </select>
+        </div>
+        
+        <div class="option-group">
+            <label for="sourceLanguages">要翻译的源语言 (按住Ctrl多选)</label>
+            <select id="sourceLanguages" multiple size="5">
+                <option value="en">英语</option>
+                <option value="ja">日语</option>
+                <option value="ko">韩语</option>
+                <option value="es">西班牙语</option>
+                <option value="fr">法语</option>
+            </select>
+        </div>
+        
+        <div class="option-group">
+            <div class="checkbox-option">
+                <input type="checkbox" id="showLanguageTag">
+                <label for="showLanguageTag">显示语言标签 (如 "英译中:")</label>
+            </div>
+        </div>
+        
+        <button id="saveBtn">保存设置</button>
+        
+        <div id="status" class="status">设置已保存!</div>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>

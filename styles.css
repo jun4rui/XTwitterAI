@@ -1,0 +1,27 @@
+.translated-text {
+    font-size: 0.9em;
+    font-style: italic;
+    color: #657786;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid #e1e8ed;
+}
+
+.translation-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.translation-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.translation-toggle label {
+    margin-right: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+}
