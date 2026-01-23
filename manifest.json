@@ -28,9 +28,8 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "X Tweet Translator"
+    "default_title": "X/Twitter本地AI助手"
   },
-  "options_page": "options.html",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
