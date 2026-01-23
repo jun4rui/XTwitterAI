@@ -5,12 +5,16 @@
   "description": "使用Chrome内建AI翻译功能翻译，超快，无需联网，无费用，无需登录",
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "notifications"
   ],
   "host_permissions": [
     "*://*.x.com/*",
     "*://*.twitter.com/*"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": [
