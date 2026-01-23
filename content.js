@@ -7,7 +7,7 @@ function initializeSettings() {
         chrome.storage.sync.get({
             isEnabled: true,
             targetLanguage: 'zh',
-            sourceLanguages: ['en', 'ja', 'ko', 'es'],
+            sourceLanguages: ['en', 'ja', 'ko', 'es', 'de'],
             showLanguageTag: true
         }, function (result) {
             settings = result;
@@ -24,7 +24,8 @@ const languageModels = {
     en: {loaded: false, translator: null},
     ja: {loaded: false, translator: null},
     ko: {loaded: false, translator: null},
-    es: {loaded: false, translator: null}
+    es: {loaded: false, translator: null},
+    de: {loaded: false, translator: null}
 };
 
 
@@ -109,7 +110,7 @@ if (document.body) {
 async function preloadLanguageModels() {
     showDownloadProgress(true);
 
-    const languages = ['en', 'ja', 'ko', 'es'];
+    const languages = ['en', 'ja', 'ko', 'es','de'];
     const total = languages.length;
     let completed = 0;
 
@@ -235,6 +236,9 @@ function translateTweet(tweetElement) {
                             break;
                         case 'es':
                             langLabel = `西译${getLanguageName(settings.targetLanguage)}:`;
+                            break;
+                        case 'de':
+                            langLabel = `德译${getLanguageName(settings.targetLanguage)}:`;
                             break;
                         default:
                             langLabel = `${sourceLanguage}译${getLanguageName(settings.targetLanguage)}:`; // 默认情况
