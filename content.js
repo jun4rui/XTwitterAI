@@ -1,5 +1,6 @@
 // 从存储中获取设置，默认值
 let settings = {};
+const translatedTextStyleName = 'translated-text';
 
 function initializeSettings() {
     return new Promise((resolve) => {
@@ -8,7 +9,7 @@ function initializeSettings() {
             targetLanguage: 'zh',
             sourceLanguages: ['en', 'ja', 'ko', 'es'],
             showLanguageTag: true
-        }, function(result) {
+        }, function (result) {
             settings = result;
             resolve(settings);
         });
@@ -20,86 +21,30 @@ initializeSettings();
 
 // 语言模型状态管理
 const languageModels = {
-    en: { loaded: false, translator: null },
-    ja: { loaded: false, translator: null },
-    ko: { loaded: false, translator: null },
-    es: { loaded: false, translator: null }
+    en: {loaded: false, translator: null},
+    ja: {loaded: false, translator: null},
+    ko: {loaded: false, translator: null},
+    es: {loaded: false, translator: null}
 };
 
-// 创建下载进度条元素
-function createDownloadUI() {
-    const progressContainer = document.createElement('div');
-    progressContainer.className = 'download-progress-container';
-    progressContainer.id = 'downloadProgressContainer';
-    progressContainer.innerHTML = `
-        <div class="download-status" id="downloadStatus">正在下载语言模型...</div>
-        <div class="download-progress-bar">
-            <div class="download-progress-fill" id="downloadProgressFill"></div>
-        </div>
-    `;
-    document.body.appendChild(progressContainer);
-}
 
 // 创建翻译文本的样式
 function injectStyles() {
     const style = document.createElement('style');
-    style.textContent = `
-        .translated-text {
-            font-size: 0.9em;
-            font-style: normal !important;
-            color: #657786;
-            margin-top: 5px;
-            padding-top: 5px;
-            border-top: 1px solid #e1e8ed;
-        }
-        
-        /* 下载进度条样式 */
-        .download-progress-container {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 10000;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: none;
-        }
-        
-        .download-progress-bar {
-            width: 200px;
-            height: 20px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        
-        .download-progress-fill {
-            height: 100%;
-            background-color: #4CAF50;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        
-        .download-status {
-            padding: 5px 10px;
-            font-size: 12px;
-            text-align: center;
-        }
-    `;
-    
+    style.textContent = ``;
+
     if (document.head) {
         document.head.appendChild(style);
     } else {
         // 如果head还不存在，则等待DOM加载完成
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             document.head.appendChild(style);
         });
     }
 }
 
 injectStyles();
-createDownloadUI();
+
 
 // 使用MutationObserver监听按钮button[data-testid="tweet-text-show-more-link"]
 const showMoreObserver = new MutationObserver((mutations) => {
@@ -113,7 +58,7 @@ const showMoreObserver = new MutationObserver((mutations) => {
                     const tweetContainer = targetNode.closest('[data-testid="tweet"]');
                     if (tweetContainer) {
                         // 删除已有的翻译文本
-                        const existingTranslations = tweetContainer.querySelectorAll('.translated-text');
+                        const existingTranslations = tweetContainer.querySelectorAll(`.${translatedTextStyleName}`);
                         existingTranslations.forEach(trans => trans.remove());
 
                         // 重置翻译状态，以便重新翻译
@@ -124,7 +69,7 @@ const showMoreObserver = new MutationObserver((mutations) => {
 
                         // 重新翻译这条推文
                         setTimeout(() => {
-                            if(settings.isEnabled) {
+                            if (settings.isEnabled) {
                                 translateTweet(tweetContainer);
                             }
                         }, 100);
@@ -160,49 +105,32 @@ if (document.body) {
     });
 }
 
-// 显示下载进度
-function showDownloadProgress(show) {
-    const container = document.getElementById('downloadProgressContainer');
-    if (container) {
-        container.style.display = show ? 'block' : 'none';
-    }
-}
-
-// 更新下载进度
-function updateDownloadProgress(percent, status) {
-    const fill = document.getElementById('downloadProgressFill');
-    const statusEl = document.getElementById('downloadStatus');
-    
-    if (fill) fill.style.width = percent + '%';
-    if (statusEl) statusEl.textContent = status;
-}
-
 // 预加载语言模型
 async function preloadLanguageModels() {
     showDownloadProgress(true);
-    
+
     const languages = ['en', 'ja', 'ko', 'es'];
     const total = languages.length;
     let completed = 0;
-    
+
     for (const lang of languages) {
         try {
             updateDownloadProgress((completed / total) * 100, `正在加载 ${lang} -> zh 模型 (${completed + 1}/${total})`);
-            
+
             // 创建翻译器实例
             const translator = await window.Translator.create({
                 sourceLanguage: lang,
                 targetLanguage: 'zh'
             });
-            
+
             // 保存翻译器实例
             languageModels[lang].loaded = true;
             languageModels[lang].translator = translator;
-            
+
             completed++;
             const progress = (completed / total) * 100;
             updateDownloadProgress(progress, `已加载 ${lang} -> zh 模型 (${completed}/${total})`);
-            
+
         } catch (error) {
             console.error(`Failed to load model for ${lang}:`, error);
             completed++;
@@ -210,7 +138,7 @@ async function preloadLanguageModels() {
             updateDownloadProgress(progress, `跳过 ${lang} -> zh 模型 (${completed}/${total})`);
         }
     }
-    
+
     updateDownloadProgress(100, '所有语言模型已准备就绪 ✓');
     setTimeout(() => {
         showDownloadProgress(false);
@@ -236,7 +164,7 @@ function translateText(text, callback, sourceLanguage = 'en', targetLanguage = '
     (async () => {
         try {
             let translator;
-            
+
             // 如果语言模型已预加载，则使用预加载的翻译器
             if (languageModels[sourceLanguage].loaded && languageModels[sourceLanguage].translator) {
                 translator = languageModels[sourceLanguage].translator;
@@ -247,10 +175,10 @@ function translateText(text, callback, sourceLanguage = 'en', targetLanguage = '
                     targetLanguage: targetLanguage
                 });
             }
-            
+
             // 执行翻译
             const translatedText = await translator.translate(text);
-            
+
             // 如果是临时创建的翻译器，需要销毁
             if (!languageModels[sourceLanguage].loaded || !languageModels[sourceLanguage].translator) {
                 await translator.destroy();
@@ -264,19 +192,6 @@ function translateText(text, callback, sourceLanguage = 'en', targetLanguage = '
     })();
 }
 
-// 页面加载完成后预加载语言模型
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-        if(settings.isEnabled) {
-            preloadLanguageModels();
-        }
-    });
-} else {
-    if(settings.isEnabled) {
-        preloadLanguageModels();
-    }
-}
-
 // 翻译推文内容
 function translateTweet(tweetElement) {
     // 查找推文的主要文本内容
@@ -285,7 +200,7 @@ function translateTweet(tweetElement) {
     tweetTextElements.forEach(textEl => {
         // 获取到文本的语言
         const sourceLanguage = textEl.getAttribute('lang');
-        
+
         // 检查是否已经翻译过
         if (textEl.closest('article') && textEl.closest('article').getAttribute('data-translated') === 'true') {
             return; // 如果已翻译则跳过
@@ -293,7 +208,7 @@ function translateTweet(tweetElement) {
             // 标记该article元素已翻译
             textEl.closest('article').setAttribute('data-translated', 'true');
         }
-        
+
         // 获取原始文本
         const originalText = textEl.innerText || textEl.textContent;
 
@@ -302,7 +217,7 @@ function translateTweet(tweetElement) {
             if (translatedText !== originalText && translatedText.trim() !== '') {
                 // 创建翻译文本容器
                 const translationDiv = document.createElement('div');
-                translationDiv.className = 'translated-text';
+                translationDiv.className = translatedTextStyleName;
 
                 // 根据设置决定是否显示语言标签
                 let langLabel = '';
@@ -327,7 +242,6 @@ function translateTweet(tweetElement) {
                 }
 
                 translationDiv.innerHTML = `<strong>${langLabel}</strong> ${translatedText}`;
-                translationDiv.style.fontStyle = 'italic';
 
                 // 添加到推文文本下方
                 textEl.appendChild(translationDiv);
@@ -360,7 +274,7 @@ const observer = new MutationObserver((mutations) => {
                 if (node.matches && (node.matches('[data-testid="tweet"]') || node.querySelector && node.querySelector('[data-testid="tweet"]'))) {
                     // 等待一小段时间确保内容加载完成后再翻译
                     setTimeout(() => {
-                        if(settings.isEnabled) {
+                        if (settings.isEnabled) {
                             translateTweet(node);
                         }
                     }, 300);
@@ -394,10 +308,10 @@ if (document.body) {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "toggleTranslation") {
         settings.isEnabled = request.enabled;
-        chrome.storage.sync.set({isEnabled: settings.isEnabled}, function() {
+        chrome.storage.sync.set({isEnabled: settings.isEnabled}, function () {
             console.log("Translation enabled status is now " + settings.isEnabled);
         });
-        
+
         // 如果启用了翻译且页面上有未翻译的推文，则翻译它们
         if (settings.isEnabled) {
             const tweetElements = document.querySelectorAll('[data-testid="tweet"]');
@@ -408,54 +322,54 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             });
         } else {
             // 如果禁用翻译，则移除所有翻译文本
-            const translatedElements = document.querySelectorAll('.translated-text');
+            const translatedElements = document.querySelectorAll(`.${translatedTextStyleName}`);
             translatedElements.forEach(el => el.remove());
-            
+
             // 移除标记
             const articles = document.querySelectorAll('article[data-translated]');
             articles.forEach(article => article.removeAttribute('data-translated'));
         }
-        
+
         sendResponse({success: true, isEnabled: settings.isEnabled});
     } else if (request.action === "getStatus") {
         sendResponse({isEnabled: settings.isEnabled});
     } else if (request.action === "updateOptions") {
         settings = request.options;
         console.log("Options updated", settings);
-        
+
         // 根据新设置重新处理页面
         if (settings.isEnabled) {
             const tweetElements = document.querySelectorAll('[data-testid="tweet"]');
             tweetElements.forEach(tweetEl => {
                 // 移除之前的翻译
-                const existingTranslations = tweetEl.querySelectorAll('.translated-text');
+                const existingTranslations = tweetEl.querySelectorAll(`.${translatedTextStyleName}`);
                 existingTranslations.forEach(trans => trans.remove());
-                
+
                 // 移除标记以便重新翻译
                 const articleElement = tweetEl.closest('article');
                 if (articleElement) {
                     articleElement.removeAttribute('data-translated');
                 }
-                
+
                 translateTweet(tweetEl);
             });
         } else {
             // 如果禁用翻译，则移除所有翻译文本
-            const translatedElements = document.querySelectorAll('.translated-text');
+            const translatedElements = document.querySelectorAll(`.${translatedTextStyleName}`);
             translatedElements.forEach(el => el.remove());
-            
+
             // 移除标记
             const articles = document.querySelectorAll('article[data-translated]');
             articles.forEach(article => article.removeAttribute('data-translated'));
         }
-        
+
         sendResponse({success: true, settings: settings});
     } else if (request.action === "preloadLanguageModels") {
         // 预加载语言模型
         preloadLanguageModels();
         sendResponse({success: true});
     }
-    
+
     return true; // 保持消息通道开放以进行异步响应
 });
 
@@ -463,7 +377,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
         // 翻译页面上所有现有的推文
-        if(settings.isEnabled) {
+        if (settings.isEnabled) {
             const tweetElements = document.querySelectorAll('[data-testid="tweet"]');
             tweetElements.forEach(tweetEl => {
                 translateTweet(tweetEl);
@@ -476,7 +390,7 @@ if (document.readyState === 'loading') {
     });
 } else {
     // 翻译页面上所有现有的推文
-    if(settings.isEnabled) {
+    if (settings.isEnabled) {
         const tweetElements = document.querySelectorAll('[data-testid="tweet"]');
         tweetElements.forEach(tweetEl => {
             translateTweet(tweetEl);
