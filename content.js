@@ -1,21 +1,22 @@
-// X Tweet Translator - Chrome Extension Content Script
-
 // 从存储中获取设置，默认值
-let settings = {
-    isEnabled: true,
-    targetLanguage: 'zh',
-    sourceLanguages: ['en', 'ja', 'ko', 'es'],
-    showLanguageTag: true
-};
+let settings = {};
 
-chrome.storage.sync.get({
-    isEnabled: true,
-    targetLanguage: 'zh',
-    sourceLanguages: ['en', 'ja', 'ko', 'es'],
-    showLanguageTag: true
-}, function(result) {
-    settings = result;
-});
+function initializeSettings() {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get({
+            isEnabled: true,
+            targetLanguage: 'zh',
+            sourceLanguages: ['en', 'ja', 'ko', 'es'],
+            showLanguageTag: true
+        }, function(result) {
+            settings = result;
+            resolve(settings);
+        });
+    });
+}
+
+// 初始化设置
+initializeSettings();
 
 // 语言模型状态管理
 const languageModels = {

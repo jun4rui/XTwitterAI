@@ -24,7 +24,7 @@
 - `popup.html`: 扩展弹出窗口界面
 - `popup.js`: 弹出窗口的逻辑处理
 - `options.html`: 选项页面界面
-- `options.js`: 选项页面的逻辑处理
+- `hide_options.js`: 选项页面的逻辑处理，暂时关闭
 
 ## 安装方法
 
