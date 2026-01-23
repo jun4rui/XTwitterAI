@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 enabled: enabled
             }, function (response) {
                 if (chrome.runtime.lastError) {
-                    console.log("Could not establish connection. Tab may have been closed.");
+                    console.log("Could not establish connection. Tab may have been closed.", response);
                 }
             });
         });
