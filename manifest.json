@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "X/Twitter本地AI助手（免费本地AI翻译）",
-  "version": "3.5",
+  "version": "3.6",
   "description": "使用Chrome内建AI翻译功能翻译，超快，无需联网，无费用，无需登录",
   "permissions": [
     "activeTab",
