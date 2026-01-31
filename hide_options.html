@@ -1,145 +1,193 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title>X/Twitter AI助手</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X/Twitter 本地AI助手设置</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
             background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            padding: 20px;
         }
         
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .icon {
+            width: 48px;
+            height: 48px;
         }
         
         h1 {
             color: #1da1f2;
+            margin: 0;
             text-align: center;
-            margin-bottom: 30px;
         }
         
-        .option-group {
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .option-group:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        input[type="checkbox"] {
-            margin-right: 10px;
-        }
-        
-        input[type="text"], select {
+        .settings-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
+            max-width: 500px;
+            margin-top: 20px;
         }
         
-        .checkbox-option {
+        .language-option {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            justify-content: space-between;
+            margin: 15px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
         
-        button {
+        .language-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .language-info input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .language-info label {
+            font-size: 16px;
+            color: #333;
+            margin: 0;
+        }
+        
+        .status-indicator {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .status-available {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-downloaded {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .status-unavailable {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .download-btn {
             background-color: #1da1f2;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
+            padding: 5px 10px;
+            border-radius: 15px;
             cursor: pointer;
-            font-size: 16px;
-            display: block;
-            margin: 20px auto 0;
+            font-size: 14px;
+            font-weight: bold;
         }
         
-        button:hover {
+        .download-btn:hover {
             background-color: #0d8bd9;
         }
         
-        .status {
-            text-align: center;
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 4px;
-            display: none;
-        }
-        
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            display: block;
-        }
-        
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            display: block;
+        .download-btn.downloading {
+            background-color: #6c757d;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>X Tweet Translator 设置</h1>
-        
-        <div class="option-group">
-            <div class="checkbox-option">
-                <input type="checkbox" id="enableTranslation">
-                <label for="enableTranslation">启用推文翻译功能</label>
-            </div>
-        </div>
-        
-        <div class="option-group">
-            <label for="targetLanguage">目标翻译语言</label>
-            <select id="targetLanguage">
-                <option value="zh" selected>中文</option>
-            </select>
-        </div>
-        
-        <div class="option-group">
-            <label for="sourceLanguages">要翻译的源语言 (按住Ctrl多选)</label>
-            <select id="sourceLanguages" multiple size="5">
-                <option value="en">英语</option>
-                <option value="ja">日语</option>
-                <option value="ko">韩语</option>
-                <option value="es">西班牙语</option>
-                <option value="fr">法语</option>
-            </select>
-        </div>
-        
-        <div class="option-group">
-            <div class="checkbox-option">
-                <input type="checkbox" id="showLanguageTag">
-                <label for="showLanguageTag">显示语言标签 (如 "英译中:")</label>
-            </div>
-        </div>
-        
-        <button id="saveBtn">保存设置</button>
-        
-        <div id="status" class="status">设置已保存!</div>
+    <div class="header">
+        <img src="icon48.png" alt="Icon" class="icon">
+        <h1>X/Twitter 本地AI助手设置</h1>
     </div>
+    
+    <div class="settings-container">
+        <h2>语言翻译设置</h2>
+        <div class="language-option">
+            <div class="language-info">
+                <input type="checkbox" id="english" disabled>
+                <label for="english">英语</label>
+            </div>
+            <span class="status-indicator status-downloaded">已下载</span>
+        </div>
+        <div class="language-option">
+            <div class="language-info">
+                <input type="checkbox" id="japanese" disabled>
+                <label for="japanese">日语</label>
+            </div>
+            <span class="status-indicator status-downloaded">已下载</span>
+        </div>
+        <div class="language-option">
+            <div class="language-info">
+                <input type="checkbox" id="korean" disabled>
+                <label for="korean">韩语</label>
+            </div>
+            <span class="status-indicator status-downloaded">已下载</span>
+        </div>
+        <div class="language-option">
+            <div class="language-info">
+                <input type="checkbox" id="spanish" disabled>
+                <label for="spanish">西班牙语</label>
+            </div>
+            <button class="download-btn" onclick="downloadTranslationModel(this, 'es')">点击下载</button>
+        </div>
+        <div class="language-option">
+            <div class="language-info">
+                <input type="checkbox" id="german" disabled>
+                <label for="german">德语</label>
+            </div>
+            <button class="download-btn" onclick="downloadTranslationModel(this, 'de')">点击下载</button>
+        </div>
+    </div>
+    
+    <script>
+function downloadTranslationModel(button, languageCode) {
+    console.log(`开始下载 ${languageCode} 翻译模型`);
 
-    <script src="hide_options.js"></script>
+    // 更改按钮文本为"下载中..."
+    button.textContent = '下载中...';
+    button.classList.add('downloading');
+    button.disabled = true;
+
+    // 模拟下载过程
+    setTimeout(() => {
+        // 创建一个新的状态指示器元素
+        const statusIndicator = document.createElement('span');
+        statusIndicator.className = 'status-indicator status-downloaded';
+        statusIndicator.textContent = '已下载';
+
+        // 替换按钮为状态指示器
+        button.parentElement.replaceChild(statusIndicator, button);
+
+        // 找到对应的复选框并启用它
+        const languageOption = statusIndicator.closest('.language-option');
+        const checkbox = languageOption.querySelector('input[type="checkbox"]');
+        checkbox.disabled = false;
+
+        console.log(`${languageCode} 翻译模型下载完成！`);
+    }, 3000); // 3秒后完成下载
+}
+    </script>
 </body>
 </html>
