@@ -2,10 +2,414 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>X/Twitter AI助手</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X/Twitter本地AI助手 - 免费本地AI翻译扩展</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #374151;
+            background: #F0FDF4;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: #065F46;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(6, 95, 70, 0.3);
+            position: relative;
+        }
+
+        .github-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #10B981;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .github-link:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .github-icon {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .logo {
+            width: 128px;
+            height: 128px;
+            margin: 0 auto 20px;
+            display: block;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #d1fae5;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(6, 95, 70, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #d1fae5;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(6, 95, 70, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            color: #065F46;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .feature-card p {
+            color: #374151;
+            font-size: 1rem;
+        }
+
+        .section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 40px 0;
+            box-shadow: 0 5px 20px rgba(6, 95, 70, 0.1);
+            border: 1px solid #d1fae5;
+        }
+
+        .section h2 {
+            color: #065F46;
+            margin-bottom: 25px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .install-steps {
+            counter-reset: step-counter;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .install-step {
+            counter-increment: step-counter;
+            margin-bottom: 30px;
+            padding-left: 60px;
+            position: relative;
+        }
+
+        .install-step::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            background: #10B981;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .install-step h3 {
+            color: #065F46;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .install-step p {
+            color: #374151;
+            line-height: 1.7;
+        }
+
+        .languages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .language-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #d1fae5;
+            transition: all 0.3s ease;
+        }
+
+        .language-item:hover {
+            border-color: #10B981;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .language-name {
+            font-weight: 600;
+            color: #065F46;
+            margin-bottom: 5px;
+        }
+
+        .language-code {
+            color: #374151;
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: #065F46;
+            border-radius: 20px;
+            margin: 50px 0;
+            box-shadow: 0 8px 32px rgba(6, 95, 70, 0.3);
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #10B981;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s ease;
+            margin: 10px;
+            border: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            background: #059669;
+        }
+
+        .requirements-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .requirements-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #d1fae5;
+        }
+
+        .requirements-list li:last-child {
+            border-bottom: none;
+        }
+
+        .requirements-list strong {
+            color: #065F46;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #d1fae5;
+            font-size: 0.9rem;
+            background: #065F46;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .warning-box {
+            background: #f0fdf4;
+            border: 1px solid #d1fae5;
+            color: #374151;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section {
+                padding: 25px;
+            }
+        }
+    </style>
 </head>
 <body>
-抱歉，暂时还没来得及写这个。
-请大家先看看<a href="xtweettranslator.html" target="_blank">《项目隐私说明》</a>
+    <div class="container">
+        <header>
+            <a href="https://github.com/jun4rui/XTwitterAI" class="github-link" target="_blank">
+                <svg class="github-icon" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+                <span>GitHub</span>
+            </a>
+            <img src="../icon128.png" alt="X/Twitter AI助手 Logo" class="logo">
+            <h1>X/Twitter本地AI助手</h1>
+            <p class="subtitle">免费本地AI翻译扩展</p>
+        </header>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>极速翻译</h3>
+                <p>使用Chrome内建AI翻译功能，无需联网，翻译速度快如闪电，体验流畅无延迟。</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>完全免费</h3>
+                <p>无需付费、无需登录、无需API密钥，一次安装永久使用，真正零成本解决方案。</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>隐私安全</h3>
+                <p>所有翻译都在本地完成，您的数据不会上传到任何服务器，保护您的隐私安全。</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h3>多语言支持</h3>
+                <p>支持英语、日语、韩语、西班牙语、德语等多种语言自动识别和翻译。</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI智能翻译</h3>
+                <p>基于经过训练的专家模型，提供高质量的翻译结果，准确率高，自然流畅。</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>智能适配</h3>
+                <p>自动检测X/Twitter页面上的推文内容，智能识别需要翻译的文本，无缝集成。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>支持的语言</h2>
+            <div class="languages-grid">
+                <div class="language-item">
+                    <div class="language-name">英语</div>
+                    <div class="language-code">en → zh</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-name">日语</div>
+                    <div class="language-code">ja → zh</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-name">韩语</div>
+                    <div class="language-code">ko → zh</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-name">西班牙语</div>
+                    <div class="language-code">es → zh</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-name">德语</div>
+                    <div class="language-code">de → zh</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>安装要求</h2>
+            <ul class="requirements-list">
+                <li><strong>浏览器要求：</strong> Google Chrome 138及以上版本</li>
+                <li><strong>硬件要求：</strong> 支持WebGPU的现代设备（大部分设备均支持）</li>
+                <li><strong>操作系统：</strong> Windows、macOS、Linux、ChromeOS均可</li>
+                <li><strong>网络环境：</strong> 首次使用需要下载语言模型（约几十MB）</li>
+            </ul>
+            
+            <div class="warning-box">
+                ⚠️ <strong>注意：</strong> 首次使用时会自动下载所需的AI翻译模型，请确保网络连接稳定。下载完成后可离线使用。
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2 style="color: #FFF;">立即体验</h2>
+            <p style="color: #d1fae5; margin-bottom: 30px; font-size: 1.2rem;">
+                让阅读外文推文变得更加轻松简单
+            </p>
+            <a href="https://chromewebstore.google.com/detail/lecmjjkkoaffamjemghmjoidbkkkcnom?utm_source=item-share-cb" class="cta-button">下载扩展</a>
+            <a href="xtweettranslator.html" class="cta-button" style="background: transparent; border: 2px solid white; color: white;">
+                查看隐私说明
+            </a>
+        </div>
+
+        <footer>
+            <p>X/Twitter本地AI助手 © 2024 | 基于Chrome Translator API构建</p>
+            <p>开源项目 | 隐私优先</p>
+        </footer>
+    </div>
 </body>
 </html>
